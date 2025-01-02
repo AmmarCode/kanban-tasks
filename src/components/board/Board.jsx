@@ -1,5 +1,7 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import styled from '@emotion/styled';
+import { selectActiveBoard } from '../../store/boardsSlice';
 
 const BoardContainer = styled.div`
   display: flex;
@@ -68,7 +70,7 @@ const AddColumnButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  height: 90%;
   transition: color 0.2s ease;
 
   &:hover {
@@ -77,37 +79,15 @@ const AddColumnButton = styled.button`
 `;
 
 const Board = () => {
-  // Sample data - this would come from your state management system
-  const columns = [
-    {
-      name: 'Todo',
-      color: '#49C4E5',
-      tasks: [
-        { title: 'Build UI for onboarding flow', subtasks: { completed: 0, total: 3 } },
-        { title: 'Build UI for search', subtasks: { completed: 1, total: 2 } }
-      ]
-    },
-    {
-      name: 'Doing',
-      color: '#8471F2',
-      tasks: [
-        { title: 'Design settings and search pages', subtasks: { completed: 2, total: 3 } },
-        { title: 'Add account management endpoints', subtasks: { completed: 2, total: 2 } }
-      ]
-    },
-    {
-      name: 'Done',
-      color: '#67E2AE',
-      tasks: [
-        { title: 'Conduct 5 wireframe tests', subtasks: { completed: 3, total: 3 } },
-        { title: 'Create wireframe prototype', subtasks: { completed: 1, total: 1 } }
-      ]
-    }
-  ];
+  const activeBoard = useSelector(selectActiveBoard);
+
+  if (!activeBoard) {
+    return <div>No board selected</div>;
+  }
 
   return (
     <BoardContainer>
-      {columns.map((column, index) => (
+      {activeBoard.columns.map((column, index) => (
         <Column key={index}>
           <ColumnHeader color={column.color}>
             {column.name} ({column.tasks.length})
