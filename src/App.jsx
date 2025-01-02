@@ -1,16 +1,16 @@
 import React from 'react';
 import { Global } from '@emotion/react';
 import globalStyles from './styles/GlobalStyles';
-import Layout from './components/layout/Layout';
+import Header from './components/layout/Header';
 import Board from './components/board/Board';
 
 function App() {
   return (
     <>
       <Global styles={globalStyles} />
-      <Layout>
+      <Header>
         <Board />
-      </Layout>
+      </Header>
     </>
   );
 }
