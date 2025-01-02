@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleTheme } from '../../store/themeSlice';
+import BoardModal from '../modals/BoardModal';
 import logoDark from '../../assets/logo-dark.svg';
 import logoLight from '../../assets/logo-light.svg';
 import iconBoard from '../../assets/icon-board.svg';
@@ -199,17 +200,20 @@ const ShowSidebarButton = styled.button`
 const Sidebar = () => {
   const dispatch = useDispatch();
   const isDarkMode = useSelector((state) => state.theme.isDarkMode);
-  const [activeBoard, setActiveBoard] = useState('Platform Launch');
+  const boards = useSelector((state) => state.boards.boards);
   const [isVisible, setIsVisible] = useState(true);
-
-  const boards = [
-    'Platform Launch',
-    'Marketing Plan',
-    'Roadmap'
-  ];
+  const [isBoardModalOpen, setIsBoardModalOpen] = useState(false);
 
   const toggleSidebar = () => {
     setIsVisible(!isVisible);
+  };
+
+  const openBoardModal = () => {
+    setIsBoardModalOpen(true);
+  };
+
+  const closeBoardModal = () => {
+    setIsBoardModalOpen(false);
   };
 
   return (
@@ -221,17 +225,17 @@ const Sidebar = () => {
         
         <BoardsSection isVisible={isVisible}>
           <BoardsTitle>All Boards ({boards.length})</BoardsTitle>
-          {boards.map((board, index) => (
+          {boards.map((board) => (
             <BoardButton 
-              key={index}
-              className={board === activeBoard ? 'active' : ''}
-              onClick={() => setActiveBoard(board)}
+              key={board.id}
+              className={board.id === boards.activeBoard ? 'active' : ''}
             >
               <img src={iconBoard} alt="" />
-              {board}
+              {board.name}
             </BoardButton>
           ))}
-          <CreateBoardButton>
+          
+          <CreateBoardButton onClick={openBoardModal}>
             <img src={iconBoard} alt="" />
             + Create New Board
           </CreateBoardButton>
@@ -259,6 +263,11 @@ const Sidebar = () => {
       <ShowSidebarButton isVisible={isVisible} onClick={toggleSidebar}>
         <img src={iconShowSidebar} alt="Show Sidebar" />
       </ShowSidebarButton>
+
+      <BoardModal 
+        isOpen={isBoardModalOpen} 
+        onClose={closeBoardModal} 
+      />
     </>
   );
 };
